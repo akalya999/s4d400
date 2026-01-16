@@ -9,22 +9,27 @@ ENDCLASS.
 
 CLASS zcl_07_main_vehicles IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
-
     " Deklarationen
     DATA vehicle  TYPE REF TO zcl_07_vehicle.
     DATA vehicles TYPE TABLE OF REF TO zcl_07_vehicle. " liste mit nur eine spalte (bas. liste)
-
+    DATA truck    TYPE REF TO zcl_07_truck.
 
     " Instanziierungen
     out->write( zcl_07_vehicle=>number_of_vehicles ).
 
-    vehicle = NEW #( make = 'Porsche' model = '911' ).
+    vehicle = NEW zcl_07_car( make  = 'Porsche'
+                              model = '911'
+                              seats = 2 ). " Upcast, Widening: im klassendiagramm von unten nach oben
     APPEND vehicle TO vehicles.
 
-    vehicle = NEW #( make = 'MAN' model = 'TGX' ).
+    vehicle = NEW zcl_07_truck( make          = 'MAN'
+                                model         = 'TGX'
+                                cargo_in_tons = 40 ). " Upcast
     APPEND vehicle TO vehicles.
 
-    vehicle = NEW #( make =  'Skoda' model = 'Superb Combi' ).
+    vehicle = NEW zcl_07_car( make  = 'Skoda'
+                              model = 'Superb Combi'
+                              seats = 5 ). " Upcast
     APPEND vehicle TO vehicles.
 
     out->write( zcl_07_vehicle=>number_of_vehicles ).
@@ -33,14 +38,21 @@ CLASS zcl_07_main_vehicles IMPLEMENTATION.
     LOOP AT vehicles INTO vehicle.
       TRY.
           vehicle->accelerate( 30 ).
-          vehicle->brake( 10 ).
+          vehicle->brake( 20 ).
           vehicle->accelerate( 100 ).
-        CATCH zcx_07_value_too_high into data(x).
+
+        CATCH zcx_07_value_too_high INTO DATA(x).
           out->write( x->get_text( ) ).
 
       ENDTRY.
-      out->write( |{ vehicle->make } { vehicle->model } ({ vehicle->speed_in_kmh }km/h)| ).
+      IF vehicle IS INSTANCE OF zcl_07_truck. " wenn vehicle gleich truck
+        truck = CAST #( vehicle ). " Downcast. das was in vehicle drin in truck kopieren, aber schwer, weil vehicle zb auch auto sein könnte
+        truck->transform( ).
+        out->write( |{ COND #( WHEN truck->is_transformed = 'X'
+                               THEN 'Der LKW hat sich in einen Autobot transformiert       '
+                               ELSE 'Der Autobot hat sich wieder in einen LKW transformiert' )  }| ).
+      ENDIF.
+      out->write( vehicle->to_string( ) ). " (Dynamische) Polymorphie, entscheidet sich zur laufzeit: jedes fahrzeug hat diese methode
     ENDLOOP.
-
   ENDMETHOD.
 ENDCLASS.
