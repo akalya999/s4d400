@@ -1,5 +1,5 @@
 CLASS zcl_07_airplane DEFINITION
-  PUBLIC FINAL
+  PUBLIC
   CREATE PUBLIC.
 
   PUBLIC SECTION.
@@ -9,11 +9,19 @@ CLASS zcl_07_airplane DEFINITION
                 empty_weight_in_tons TYPE i
       RAISING   zcx_abap_initial_parameter.
 
+    METHODS get_total_weight_in_tons RETURNING VALUE(total_weight_in_tons) TYPE i.
+
+    METHODS to_string RETURNING VALUE(string) TYPE string.
+
     DATA id                   TYPE string READ-ONLY.
     DATA plane_type           TYPE string READ-ONLY.
     DATA empty_weight_in_tons TYPE i      READ-ONLY.
 
     CLASS-DATA number_of_airplanes TYPE i READ-ONLY.
+
+  PROTECTED SECTION.
+
+  PRIVATE SECTION.
 
 ENDCLASS.
 
@@ -35,5 +43,13 @@ CLASS zcl_07_airplane IMPLEMENTATION.
     me->empty_weight_in_tons = empty_weight_in_tons.
 
     number_of_airplanes += 1.
+  ENDMETHOD.
+
+  METHOD get_total_weight_in_tons.
+    total_weight_in_tons = empty_weight_in_tons * 11 / 10.
+  ENDMETHOD.
+
+  METHOD to_string.
+    string = |{ id }, { plane_type }, { empty_weight_in_tons }t, (Total weight: { get_total_weight_in_tons( ) }t|.
   ENDMETHOD.
 ENDCLASS.
