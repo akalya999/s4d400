@@ -1,22 +1,19 @@
 CLASS zcl_07_carrier DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+  PUBLIC FINAL
+  CREATE PUBLIC.
 
   PUBLIC SECTION.
-  DATA name TYPE string READ-ONLY.
-  DATA airplanes TYPE z07_airplanes READ-ONLY .
+    INTERFACES zif_07_partner.
 
-  METHODS constructor IMPORTING name  TYPE string.
+    DATA name      TYPE string        READ-ONLY.
+    DATA airplanes TYPE z07_airplanes READ-ONLY.
 
-  METHODS add_airplane IMPORTING airplane TYPE REF TO zcl_07_airplane.
+    METHODS constructor             IMPORTING !name                      TYPE string.
 
-  METHODS get_biggest_cargo_plane RETURNING VALUE(biggest_cargo_plane) TYPE REF TO zcl_07_cargo_plane.
+    METHODS add_airplane            IMPORTING airplane                   TYPE REF TO zcl_07_airplane.
 
-  PROTECTED SECTION.
-  PRIVATE SECTION.
+    METHODS get_biggest_cargo_plane RETURNING VALUE(biggest_cargo_plane) TYPE REF TO zcl_07_cargo_plane.
 ENDCLASS.
-
 
 
 CLASS zcl_07_carrier IMPLEMENTATION.
@@ -25,19 +22,22 @@ CLASS zcl_07_carrier IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_airplane.
-     APPEND airplane to airplanes.
+    APPEND airplane TO airplanes.
   ENDMETHOD.
 
   METHOD get_biggest_cargo_plane.
-    DATA max_cargo_in_tons type i VALUE 0.
+    DATA max_cargo_in_tons TYPE i VALUE 0.
 
     LOOP AT airplanes INTO DATA(airplane).
-      IF airplane IS INSTANCE OF zcl_07_cargo_plane
-      AND airplane->get_total_weight_in_tons(  ) > max_cargo_in_tons. "nur für cargo_planes
-          biggest_cargo_plane = cast #( airplane ).
-          max_cargo_in_tons = biggest_cargo_plane->get_total_weight_in_tons( ).
-        ENDIF.
+      IF     airplane IS INSTANCE OF zcl_07_cargo_plane
+         AND airplane->get_total_weight_in_tons( )  > max_cargo_in_tons. " nur für cargo_planes
+        biggest_cargo_plane = CAST #( airplane ).
+        max_cargo_in_tons = biggest_cargo_plane->get_total_weight_in_tons( ).
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD zif_07_partner~to_string.
+    string = 'Ich bin die Fluggesellschaft'.
+  ENDMETHOD.
 ENDCLASS.

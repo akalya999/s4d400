@@ -14,6 +14,10 @@ CLASS zcl_07_main_vehicles IMPLEMENTATION.
     DATA vehicles TYPE TABLE OF REF TO zcl_07_vehicle. " liste mit nur eine spalte (bas. liste)
     DATA truck    TYPE REF TO zcl_07_truck.
 
+    DATA rental   TYPE REF TO zcl_07_rental.
+    DATA carrier  TYPE REF TO zcl_07_carrier.
+    DATA partners TYPE TABLE OF REF TO zif_07_partner. " interne Tabelle/Liste, objekte von unterklassen: rental, carrier
+
     " Instanziierungen
     out->write( zcl_07_vehicle=>number_of_vehicles ).
 
@@ -33,6 +37,12 @@ CLASS zcl_07_main_vehicles IMPLEMENTATION.
     APPEND vehicle TO vehicles.
 
     out->write( zcl_07_vehicle=>number_of_vehicles ).
+
+    rental = NEW #( ).
+    carrier = NEW #( 'Lufhansa' ).
+
+    APPEND rental TO partners. " Upcast
+    APPEND carrier TO partners. " Upcast
 
     " Ausgabe
     LOOP AT vehicles INTO vehicle.
@@ -54,5 +64,15 @@ CLASS zcl_07_main_vehicles IMPLEMENTATION.
       ENDIF.
       out->write( vehicle->to_string( ) ). " (Dynamische) Polymorphie, entscheidet sich zur laufzeit: jedes fahrzeug hat diese methode
     ENDLOOP.
+
+    LOOP AT partners INTO DATA(partner).
+      out->write( partner->to_string( ) ). " (Dynamische) Polymorphie, je nachdem um welche referenz es sich handelt, untersch. implementierung
+
+      IF partner IS INSTANCE OF zcl_07_carrier.
+        carrier = CAST #( partner ). " Downcast
+        out->write( carrier->get_biggest_cargo_plane( ) ).
+      ENDIF.
+    ENDLOOP.
+
   ENDMETHOD.
 ENDCLASS.
