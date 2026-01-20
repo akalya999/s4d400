@@ -10,7 +10,7 @@ define view entity Z07_Demo04
   as select from /dmo/travel                      as t
 
     inner join   DDCDS_CUSTOMER_DOMAIN_VALUE_T(p_domain_name : '/DMO/STATUS') as s on  s.value_low = t.status // Entwicklungsobjekt immer GROß
-                                                                                   and s.language  = cast('E' as abap.lang) //$session.system_language
+                                                                                   and s.language  = $session.system_language
 
 {
   key t.travel_id as TravelId,
