@@ -1,0 +1,69 @@
+@Metadata.layer: #CUSTOMER
+
+@UI.headerInfo: { typeNamePlural: 'Travels', title.value: 'TravelId', description.value: 'Description' }
+
+annotate entity ZC_07_TravelTP
+  with
+
+{
+  /* Facets */
+  @UI.facet: [ { position: 10, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Details', label: 'Travel Details'      },
+               { position: 20, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Admin',   label: 'Administrative Data' } ]
+
+
+  /* Fields */
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.fieldGroup: [{ position: 10, qualifier: 'Details' }]
+  TravelId;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  @UI.fieldGroup: [{ position: 20, qualifier: 'Details' }]
+  AgencyId;
+
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.selectionField: [ { position: 20 } ]
+  @UI.fieldGroup: [{ position: 30, qualifier: 'Details' }]
+  CustomerId;
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.selectionField: [ { position: 30 } ]
+  @UI.fieldGroup: [{ position: 40, qualifier: 'Details' }]
+  BeginDate;
+
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.selectionField: [ { position: 40 } ]
+  @UI.fieldGroup: [{ position: 50, qualifier: 'Details' }]
+  EndDate;
+
+  @UI.fieldGroup: [{ position: 60, qualifier: 'Details' }]
+  BookingFee;
+
+  @UI.lineItem: [ { position: 60 } ]
+  @UI.selectionField: [ { position: 50 } ]
+  @UI.fieldGroup: [{ position: 70, qualifier: 'Details' }]
+  TotalPrice;
+
+  //  CurrencyCode;
+
+  @UI.lineItem: [ { position: 70 } ]
+  @UI.fieldGroup: [{ position: 80, qualifier: 'Details' }]
+  Description;
+
+  @UI.lineItem: [ { position: 80 } ]
+  @UI.selectionField: [ { position: 60 } ]
+  @UI.fieldGroup: [{ position: 90, qualifier: 'Details' }]
+  Status;
+  
+  @UI.fieldGroup: [{ position: 10, qualifier: 'Admin' }]  
+    CreatedBy;
+    
+  @UI.fieldGroup: [{ position: 20, qualifier: 'Admin' }]  
+    CreatedAt;
+    
+  @UI.fieldGroup: [{ position: 30, qualifier: 'Admin' }]  
+    LastChangedBy;
+    
+  @UI.fieldGroup: [{ position: 40, qualifier: 'Admin' }]  
+    LastChangedAt;
+}
