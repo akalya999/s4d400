@@ -8,8 +8,9 @@
 
 @Search.searchable: true
 
-define view entity ZC_07_TravelTP
-  as select from ZR_07_TravelTP
+define root view entity ZC_07_TravelTP
+  provider contract transactional_query
+  as projection on ZR_07_TravelTP
 
 {
   key TravelId,
@@ -31,5 +32,12 @@ define view entity ZC_07_TravelTP
       CreatedBy,
       CreatedAt,
       LastChangedBy,
-      LastChangedAt
+      LastChangedAt,
+      
+      /* Transcient Data */
+      StatusCriticality,
+      CustomerName,
+      
+      /* Associations */
+      _Bookings : redirected to composition child ZC_07_BookingTP
 }
