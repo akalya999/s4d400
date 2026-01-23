@@ -9,6 +9,7 @@
 @Metadata.allowExtensions: true
 
 define root view entity ZC_07_MovieTP
+  provider contract transactional_query
   as projection on ZR_07_MovieTP
  
 {
@@ -19,7 +20,9 @@ define root view entity ZC_07_MovieTP
       Title,
       
       @ObjectModel.text.element: [ 'GenreText' ]
+      @Consumption.valueHelpDefinition: [ { entity: { name: 'ZI_07_GenreVH', element: 'Genre' } } ]
       Genre,
+      
       PublishingYear,
       RuntimeInMin,
       ImageUrl,
