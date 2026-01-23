@@ -9,6 +9,8 @@ CLASS lhc_Travel DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR Travel~ValidateCustomer.
     METHODS DetermineStatus FOR DETERMINE ON SAVE
       IMPORTING keys FOR Travel~DetermineStatus.
+    METHODS CancelTravel FOR MODIFY
+      IMPORTING keys FOR ACTION Travel~CancelTravel RESULT result.
 
 ENDCLASS.
 
@@ -72,6 +74,17 @@ CLASS lhc_Travel IMPLEMENTATION.
       UPDATE
       FIELDS ( Status )
       WITH travels.
+
+  ENDMETHOD.
+
+  METHOD CancelTravel.
+
+    data(message) = new zcm_00_travel(
+    textid      = zcm_00_travel=>test_message
+    user_name = sy-uname
+    severity = if_abap_behv_message=>severity-information
+    ).
+    append message to reported-%other.
 
   ENDMETHOD.
 
