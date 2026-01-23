@@ -13,24 +13,25 @@ authorization master ( instance )
   association _Ratings { create; }
 
   field ( readonly, numbering : managed ) MovieUuid;
-  field (mandatory : create) Title, Genre, PublishingYear, RuntimeInMin;
-  field (readonly : update) Title, Genre, PublishingYear, RuntimeInMin;
+  field ( mandatory : create ) Title, Genre, PublishingYear, RuntimeInMin;
+  field ( readonly : update ) Title, Genre, PublishingYear, RuntimeInMin;
+  field ( readonly ) CreatedAt, CreatedBy, LastChangedAt, LastChangedBy;
 
   validation ValidateGenre on save { create; }
 
+  action RateMovie parameter ZA_00_Rating; // result [1] $self;
 
   mapping for zabap_movie_a corresponding
-  {
-    CreatedAt = created_at;
-    CreatedBy = created_by;
-    ImageUrl = image_url;
-    LastChangedAt = last_changed_at;
-    LastChangedBy = last_changed_by;
-    MovieUuid = movie_uuid;
-    PublishingYear = publishing_year;
-    RuntimeInMin = runtime_in_min;
-
-  }
+    {
+      CreatedAt      = created_at;
+      CreatedBy      = created_by;
+      ImageUrl       = image_url;
+      LastChangedAt  = last_changed_at;
+      LastChangedBy  = last_changed_by;
+      MovieUuid      = movie_uuid;
+      PublishingYear = publishing_year;
+      RuntimeInMin   = runtime_in_min;
+    }
 
 }
 
@@ -43,18 +44,19 @@ authorization dependent by _Movie
   update;
   delete;
 
-  field( readonly, numbering : managed ) RatingUuid;
-  field ( readonly ) MovieUuid;
+  field ( readonly, numbering : managed ) RatingUuid;
+  field ( readonly ) MovieUuid, UserName, RatingDate;
   association _Movie;
 
-  mapping for zabap_rating_a corresponding
-  {
-    MovieUuid = movie_uuid;
-    Rating = rating;
-    RatingDate = rating_date;
-    RatingUuid = rating_uuid;
-    UserName = user_name;
+  determination DetermineUserName on save { create; }
+  determination DetermineRatingDate on save { create; }
 
-  }
+  mapping for zabap_rating_a corresponding
+    {
+      MovieUuid  = movie_uuid;
+      RatingDate = rating_date;
+      RatingUuid = rating_uuid;
+      UserName   = user_name;
+    }
 
 }
